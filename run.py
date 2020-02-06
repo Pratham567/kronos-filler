@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import pickle
 import select
 import time
@@ -46,7 +47,7 @@ class Kronos:
         if not silent:
             print('Logging in...')
 
-        pickle.dump( self.browser.get_cookies() , open(COOKIES_FILE,"wb"))
+        
 
         # Get login elements
         username_element = self.browser.find_element_by_name("Username")
@@ -73,6 +74,8 @@ class Kronos:
 
         if not silent:
             print('Logged in successfully.')
+
+        pickle.dump( self.browser.get_cookies() , open(COOKIES_FILE,"wb"))
 
     def incorrect_login(self):
 
@@ -138,15 +141,10 @@ class Kronos:
 
         time.sleep(1)
 
-        self.browser.switch_to.frame("ADMIN_CENTER")
-
-        get_timesheet = self.browser.find_element_by_link_text("My Current Timesheet")
-        get_timesheet.click()
-
-        time.sleep(1)
-
         self.fill_ts("resultRow1")
         self.fill_ts("resultRow0")
+
+        self.submit_timesheet()
 
     def fill_ts(self, rows_name):
 
